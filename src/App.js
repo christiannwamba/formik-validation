@@ -1,7 +1,7 @@
 import React from 'react';
 import { ExclamationCircleIcon } from '@heroicons/react/solid';
 
-function TextInput({ label, name, errorMessage, type = 'text' }) {
+function TextInput({ label, name, errorMessage, type = 'text', ...rest }) {
   return (
     <>
       <label htmlFor={name} className="block text-sm font-medium text-gray-700">
@@ -13,6 +13,7 @@ function TextInput({ label, name, errorMessage, type = 'text' }) {
           name={name}
           id={name}
           className="shadow-sm focus:ring-cyan-500 focus:border-cyan-500 block w-full sm:text-sm border-gray-300 rounded-md"
+          {...rest}
         />
         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
           <ExclamationCircleIcon
@@ -28,7 +29,7 @@ function TextInput({ label, name, errorMessage, type = 'text' }) {
   );
 }
 
-function URLInput({ label, name, errorMessage, type = 'text', prefix }) {
+function URLInput({ label, name, errorMessage, type = 'text', prefix, ...rest }) {
   return (
     <>
       <label htmlFor={name} className="block text-sm font-medium text-gray-700">
@@ -43,6 +44,7 @@ function URLInput({ label, name, errorMessage, type = 'text', prefix }) {
           name={name}
           id={name}
           className="flex-1 focus:ring-cyan-500 focus:border-cyan-500 block w-full min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300"
+          {...rest}
         />
         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
           <ExclamationCircleIcon
@@ -59,6 +61,7 @@ function URLInput({ label, name, errorMessage, type = 'text', prefix }) {
 }
 
 function App() {
+
   return (
     <div className="bg-gray-100 min-h-screen py-20">
       <main className="w-1/2 mx-auto py-24 bg-white shadow overflow-hidden sm:rounded-lg p-20">
