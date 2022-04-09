@@ -1,19 +1,6 @@
 import React from 'react';
 import { ExclamationCircleIcon } from '@heroicons/react/solid';
 
-const languages = [
-  { id: 1, name: 'JavaScript' },
-  { id: 2, name: 'Rust' },
-  { id: 3, name: 'Python' },
-  { id: 4, name: 'C++' },
-  { id: 5, name: 'Swift' },
-  { id: 6, name: 'Ruby' },
-  { id: 7, name: 'C#' },
-  { id: 8, name: 'PHP' },
-  { id: 9, name: 'Soul' },
-  { id: 10, name: 'Haskel' },
-];
-
 function TextInput({ label, name, errorMessage, type = 'text' }) {
   return (
     <>
@@ -71,34 +58,7 @@ function URLInput({ label, name, errorMessage, type = 'text', prefix }) {
   );
 }
 
-function Select({ label, name, data, errorMessage }) {
-  return (
-    <div>
-      <label
-        htmlFor="location"
-        className="block text-sm font-medium text-gray-700"
-      >
-        {label}
-      </label>
-      <select
-        id={name}
-        name={label}
-        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm rounded-md"
-        defaultValue={data[0]}
-      >
-        {data.map((d) => (
-          <option>{d.name}</option>
-        ))}
-      </select>
-      <p className="mt-2 text-sm text-red-600" id="email-error">
-        {errorMessage}
-      </p>
-    </div>
-  );
-}
-
 function App() {
-  const [selected, setSelected] = React.useState(languages[0]);
   return (
     <div className="bg-gray-100 min-h-screen py-20">
       <main className="w-1/2 mx-auto py-24 bg-white shadow overflow-hidden sm:rounded-lg p-20">
@@ -156,15 +116,6 @@ function App() {
                     label="Twitter handle"
                     name="twitter"
                     prefix="https://twitter.com/"
-                    errorMessage="Your password must be less than 4 characters."
-                  />
-                </div>
-                <div className="sm:col-span-3">
-                  <Select
-                    selected={selected}
-                    setSelected={setSelected}
-                    data={languages}
-                    label="Language"
                     errorMessage="Your password must be less than 4 characters."
                   />
                 </div>
