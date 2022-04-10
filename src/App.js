@@ -88,7 +88,14 @@ function App() {
       email: Yup.string()
         .required('Your email is required')
         .email('Please provide a valid email address'),
-      password: '',
+      // https://stackoverflow.com/a/19605207
+      password: Yup.string()
+        .required('A password is required')
+        .matches(/(?=.*?[A-Z])/, 'Password must contain at least one uppercase letter')
+        .matches(/(?=.*?[a-z])/, 'Password must contain at least one lowercase letter')
+        .matches(/(?=.*?[0-9])/, 'Password must contain at least one number')
+        .matches(/(?=.*?[#?!@$%^&*-])/, 'Password must contain at least one special character')
+        .min(8, 'Password length must be more than 8 characters'),
       twitter: Yup.string().required('Your twitter handle is required'),
     }),
     onSubmit: (values) => {
@@ -134,6 +141,7 @@ function App() {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.lastName}
+                    {...formik.getFieldProps('lastName')}
                     errorMessage={
                       formik.touched.lastName && formik.errors.lastName
                     }
