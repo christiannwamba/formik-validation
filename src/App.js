@@ -1,6 +1,6 @@
 import React from 'react';
 import { ExclamationCircleIcon } from '@heroicons/react/solid';
-import { useFormik } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 function TextInput({ label, name, errorMessage, type = 'text', ...rest }) {
@@ -74,44 +74,6 @@ function URLInput({
 }
 
 function App() {
-  const formik = useFormik({
-    initialValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      twitter: '',
-    },
-    validationSchema: Yup.object({
-      firstName: Yup.string().required('Your first name is required'),
-      lastName: Yup.string().required('Your last name is required'),
-      email: Yup.string()
-        .required('Your email is required')
-        .email('Please provide a valid email address'),
-      // https://stackoverflow.com/a/19605207
-      password: Yup.string()
-        .required('A password is required')
-        .matches(
-          /(?=.*?[A-Z])/,
-          'Password must contain at least one uppercase letter'
-        )
-        .matches(
-          /(?=.*?[a-z])/,
-          'Password must contain at least one lowercase letter'
-        )
-        .matches(/(?=.*?[0-9])/, 'Password must contain at least one number')
-        .matches(
-          /(?=.*?[#?!@$%^&*-])/,
-          'Password must contain at least one special character'
-        )
-        .min(8, 'Password length must be more than 8 characters'),
-      twitter: Yup.string().required('Your twitter handle is required'),
-    }),
-    onSubmit: (values) => {
-      console.log(values);
-    },
-  });
-
   return (
     <div className="bg-gray-100 min-h-screen py-20">
       <main className="w-1/2 mx-auto py-24 bg-white shadow overflow-hidden sm:rounded-lg p-20">
@@ -124,83 +86,128 @@ function App() {
             onboard as well.
           </p>
         </div>
-        <form onSubmit={formik.handleSubmit}>
-          <div>
-            <div>
-              <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                <div className="sm:col-span-3">
-                  <TextInput
-                    label="First name"
-                    name="firstName"
-                    type="text"
-                    {...formik.getFieldProps('firstName')}
-                    errorMessage={
-                      formik.touched.firstName && formik.errors.firstName
-                    }
-                  />
-                </div>
+        <Formik
+          initialValues={{
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            twitter: '',
+          }}
+          validationSchema={Yup.object({
+            firstName: Yup.string().required('Your first name is required'),
+            lastName: Yup.string().required('Your last name is required'),
+            email: Yup.string()
+              .required('Your email is required')
+              .email('Please provide a valid email address'),
+            // https://stackoverflow.com/a/19605207
+            password: Yup.string()
+              .required('A password is required')
+              .matches(
+                /(?=.*?[A-Z])/,
+                'Password must contain at least one uppercase letter'
+              )
+              .matches(
+                /(?=.*?[a-z])/,
+                'Password must contain at least one lowercase letter'
+              )
+              .matches(
+                /(?=.*?[0-9])/,
+                'Password must contain at least one number'
+              )
+              .matches(
+                /(?=.*?[#?!@$%^&*-])/,
+                'Password must contain at least one special character'
+              )
+              .min(8, 'Password length must be more than 8 characters'),
+            twitter: Yup.string().required('Your twitter handle is required'),
+          })}
+          onSubmit={(values) => {
+            console.log(values);
+          }}
+        >
+          {(formik) => (
+            <form onSubmit={formik.handleSubmit}>
+              <div>
+                <div>
+                  <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                    <div className="sm:col-span-3">
+                      <TextInput
+                        label="First name"
+                        name="firstName"
+                        type="text"
+                        {...formik.getFieldProps('firstName')}
+                        errorMessage={
+                          formik.touched.firstName && formik.errors.firstName
+                        }
+                      />
+                    </div>
 
-                <div className="sm:col-span-3">
-                  <TextInput
-                    label="Last name"
-                    name="lastName"
-                    type="text"
-                    {...formik.getFieldProps('lastName')}
-                    errorMessage={
-                      formik.touched.lastName && formik.errors.lastName
-                    }
-                  />
-                </div>
+                    <div className="sm:col-span-3">
+                      <TextInput
+                        label="Last name"
+                        name="lastName"
+                        type="text"
+                        {...formik.getFieldProps('lastName')}
+                        errorMessage={
+                          formik.touched.lastName && formik.errors.lastName
+                        }
+                      />
+                    </div>
 
-                <div className="sm:col-span-3">
-                  <TextInput
-                    label="Email"
-                    name="email"
-                    type="email"
-                    {...formik.getFieldProps('email')}
-                    errorMessage={formik.touched.email && formik.errors.email}
-                  />
-                </div>
+                    <div className="sm:col-span-3">
+                      <TextInput
+                        label="Email"
+                        name="email"
+                        type="email"
+                        {...formik.getFieldProps('email')}
+                        errorMessage={
+                          formik.touched.email && formik.errors.email
+                        }
+                      />
+                    </div>
 
-                <div className="sm:col-span-3">
-                  <TextInput
-                    label="Password"
-                    name="password"
-                    type="password"
-                    {...formik.getFieldProps('password')}
-                    errorMessage={
-                      formik.touched.password && formik.errors.password
-                    }
-                  />
-                </div>
+                    <div className="sm:col-span-3">
+                      <TextInput
+                        label="Password"
+                        name="password"
+                        type="password"
+                        {...formik.getFieldProps('password')}
+                        errorMessage={
+                          formik.touched.password && formik.errors.password
+                        }
+                      />
+                    </div>
 
-                <div className="sm:col-span-3">
-                  <URLInput
-                    label="Twitter handle"
-                    name="twitter"
-                    prefix="https://twitter.com/"
-                    {...formik.getFieldProps('twitter')}
-                    errorMessage={
-                      formik.touched.twitter && formik.errors.twitter
-                    }
-                  />
+                    <div className="sm:col-span-3">
+                      <URLInput
+                        label="Twitter handle"
+                        name="twitter"
+                        prefix="https://twitter.com/"
+                        {...formik.getFieldProps('twitter')}
+                        errorMessage={
+                          formik.touched.twitter && formik.errors.twitter
+                        }
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div className="pt-5">
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                disabled={!(formik.isValid && formik.dirty)}
-                className="disabled:opacity-60 disabled:hover:bg-cyan-600 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </form>
+              <div className="pt-5">
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    disabled={!(formik.isValid && formik.dirty)}
+                    className="disabled:opacity-60 disabled:hover:bg-cyan-600 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </form>
+          )}
+        </Formik>
       </main>
     </div>
   );
