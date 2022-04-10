@@ -1,5 +1,7 @@
 import React from 'react';
 import { ExclamationCircleIcon } from '@heroicons/react/solid';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 function TextInput({ label, name, errorMessage, type = 'text', ...rest }) {
   return (
@@ -15,12 +17,14 @@ function TextInput({ label, name, errorMessage, type = 'text', ...rest }) {
           className="shadow-sm focus:ring-cyan-500 focus:border-cyan-500 block w-full sm:text-sm border-gray-300 rounded-md"
           {...rest}
         />
-        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-          <ExclamationCircleIcon
-            className="h-5 w-5 text-red-500"
-            aria-hidden="true"
-          />
-        </div>
+        {errorMessage ? (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <ExclamationCircleIcon
+              className="h-5 w-5 text-red-500"
+              aria-hidden="true"
+            />
+          </div>
+        ) : null}
       </div>
       <p className="mt-2 text-sm text-red-600" id="email-error">
         {errorMessage}
@@ -29,7 +33,14 @@ function TextInput({ label, name, errorMessage, type = 'text', ...rest }) {
   );
 }
 
-function URLInput({ label, name, errorMessage, type = 'text', prefix, ...rest }) {
+function URLInput({
+  label,
+  name,
+  errorMessage,
+  type = 'text',
+  prefix,
+  ...rest
+}) {
   return (
     <>
       <label htmlFor={name} className="block text-sm font-medium text-gray-700">
@@ -46,12 +57,14 @@ function URLInput({ label, name, errorMessage, type = 'text', prefix, ...rest })
           className="flex-1 focus:ring-cyan-500 focus:border-cyan-500 block w-full min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300"
           {...rest}
         />
-        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-          <ExclamationCircleIcon
-            className="h-5 w-5 text-red-500"
-            aria-hidden="true"
-          />
-        </div>
+        {errorMessage ? (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <ExclamationCircleIcon
+              className="h-5 w-5 text-red-500"
+              aria-hidden="true"
+            />
+          </div>
+        ) : null}
       </div>
       <p className="mt-2 text-sm text-red-600" id="email-error">
         {errorMessage}
@@ -61,6 +74,27 @@ function URLInput({ label, name, errorMessage, type = 'text', prefix, ...rest })
 }
 
 function App() {
+  const formik = useFormik({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      twitter: '',
+    },
+    validationSchema: Yup.object({
+      firstName: Yup.string().required('Your first name is required'),
+      lastName: Yup.string().required('Your last name is required'),
+      email: Yup.string()
+        .required('Your email is required')
+        .email('Please provide a valid email address'),
+      password: '',
+      twitter: Yup.string().required('Your twitter handle is required'),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
 
   return (
     <div className="bg-gray-100 min-h-screen py-20">
@@ -74,7 +108,7 @@ function App() {
             onboard as well.
           </p>
         </div>
-        <form>
+        <form onSubmit={formik.handleSubmit}>
           <div>
             <div>
               <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
@@ -83,7 +117,12 @@ function App() {
                     label="First name"
                     name="firstName"
                     type="text"
-                    errorMessage="Your password must be less than 4 characters."
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.firstName}
+                    errorMessage={
+                      formik.touched.firstName && formik.errors.firstName
+                    }
                   />
                 </div>
 
@@ -92,7 +131,12 @@ function App() {
                     label="Last name"
                     name="lastName"
                     type="text"
-                    errorMessage="Your password must be less than 4 characters."
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.lastName}
+                    errorMessage={
+                      formik.touched.lastName && formik.errors.lastName
+                    }
                   />
                 </div>
 
@@ -101,7 +145,10 @@ function App() {
                     label="Email"
                     name="email"
                     type="email"
-                    errorMessage="Your password must be less than 4 characters."
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.email}
+                    errorMessage={formik.touched.email && formik.errors.email}
                   />
                 </div>
 
@@ -110,7 +157,12 @@ function App() {
                     label="Password"
                     name="password"
                     type="password"
-                    errorMessage="Your password must be less than 4 characters."
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.password}
+                    errorMessage={
+                      formik.touched.password && formik.errors.password
+                    }
                   />
                 </div>
 
@@ -119,7 +171,12 @@ function App() {
                     label="Twitter handle"
                     name="twitter"
                     prefix="https://twitter.com/"
-                    errorMessage="Your password must be less than 4 characters."
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.twitter}
+                    errorMessage={
+                      formik.touched.twitter && formik.errors.twitter
+                    }
                   />
                 </div>
               </div>
@@ -130,7 +187,8 @@ function App() {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
+                disabled={!(formik.isValid && formik.dirty)}
+                className="disabled:opacity-60 disabled:hover:bg-cyan-600 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
               >
                 Submit
               </button>
