@@ -133,9 +133,7 @@ function App() {
                     label="First name"
                     name="firstName"
                     type="text"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.firstName}
+                    {...formik.getFieldProps('firstName')}
                     errorMessage={
                       formik.touched.firstName && formik.errors.firstName
                     }
@@ -147,9 +145,6 @@ function App() {
                     label="Last name"
                     name="lastName"
                     type="text"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.lastName}
                     {...formik.getFieldProps('lastName')}
                     errorMessage={
                       formik.touched.lastName && formik.errors.lastName
@@ -162,9 +157,7 @@ function App() {
                     label="Email"
                     name="email"
                     type="email"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.email}
+                    {...formik.getFieldProps('email')}
                     errorMessage={formik.touched.email && formik.errors.email}
                   />
                 </div>
@@ -174,9 +167,7 @@ function App() {
                     label="Password"
                     name="password"
                     type="password"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.password}
+                    {...formik.getFieldProps('password')}
                     errorMessage={
                       formik.touched.password && formik.errors.password
                     }
@@ -188,9 +179,7 @@ function App() {
                     label="Twitter handle"
                     name="twitter"
                     prefix="https://twitter.com/"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.twitter}
+                    {...formik.getFieldProps('twitter')}
                     errorMessage={
                       formik.touched.twitter && formik.errors.twitter
                     }
