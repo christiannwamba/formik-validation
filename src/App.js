@@ -1,23 +1,26 @@
 import React from 'react';
 import { ExclamationCircleIcon } from '@heroicons/react/solid';
-import { Formik } from 'formik';
+import { Formik, useField } from 'formik';
 import * as Yup from 'yup';
 
-function TextInput({ label, name, errorMessage, type = 'text', ...rest }) {
+function TextInput({ label, ...rest }) {
+  const [field, meta] = useField(rest);
   return (
     <>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+      <label
+        htmlFor={rest.id || rest.name}
+        className="block text-sm font-medium text-gray-700"
+      >
         {label}
       </label>
+
       <div className="mt-1 relative">
         <input
-          type={type}
-          name={name}
-          id={name}
           className="shadow-sm focus:ring-cyan-500 focus:border-cyan-500 block w-full sm:text-sm border-gray-300 rounded-md"
+          {...field}
           {...rest}
         />
-        {errorMessage ? (
+        {meta.touched && meta.error ? (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
             <ExclamationCircleIcon
               className="h-5 w-5 text-red-500"
@@ -26,24 +29,23 @@ function TextInput({ label, name, errorMessage, type = 'text', ...rest }) {
           </div>
         ) : null}
       </div>
-      <p className="mt-2 text-sm text-red-600" id="email-error">
-        {errorMessage}
-      </p>
+      {meta.touched && meta.error ? (
+        <p className="mt-2 text-sm text-red-600" id="email-error">
+          {meta.error}
+        </p>
+      ) : null}
     </>
   );
 }
 
-function URLInput({
-  label,
-  name,
-  errorMessage,
-  type = 'text',
-  prefix,
-  ...rest
-}) {
+function URLInput({ label, prefix, ...rest }) {
+  const [field, meta] = useField(rest);
   return (
     <>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+      <label
+        htmlFor={rest.id || rest.name}
+        className="block text-sm font-medium text-gray-700"
+      >
         {label}
       </label>
       <div className="mt-1 flex rounded-md shadow-sm relative">
@@ -51,13 +53,11 @@ function URLInput({
           {prefix}
         </span>
         <input
-          type={type}
-          name={name}
-          id={name}
-          className="flex-1 focus:ring-cyan-500 focus:border-cyan-500 block w-full min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300"
+          {...field}
           {...rest}
+          className="flex-1 focus:ring-cyan-500 focus:border-cyan-500 block w-full min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300"
         />
-        {errorMessage ? (
+        {meta.touched && meta.error ? (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
             <ExclamationCircleIcon
               className="h-5 w-5 text-red-500"
@@ -66,9 +66,11 @@ function URLInput({
           </div>
         ) : null}
       </div>
-      <p className="mt-2 text-sm text-red-600" id="email-error">
-        {errorMessage}
-      </p>
+      {meta.touched && meta.error ? (
+        <p className="mt-2 text-sm text-red-600" id="email-error">
+          {meta.error}
+        </p>
+      ) : null}
     </>
   );
 }
@@ -136,10 +138,6 @@ function App() {
                         label="First name"
                         name="firstName"
                         type="text"
-                        {...formik.getFieldProps('firstName')}
-                        errorMessage={
-                          formik.touched.firstName && formik.errors.firstName
-                        }
                       />
                     </div>
 
@@ -148,23 +146,11 @@ function App() {
                         label="Last name"
                         name="lastName"
                         type="text"
-                        {...formik.getFieldProps('lastName')}
-                        errorMessage={
-                          formik.touched.lastName && formik.errors.lastName
-                        }
                       />
                     </div>
 
                     <div className="sm:col-span-3">
-                      <TextInput
-                        label="Email"
-                        name="email"
-                        type="email"
-                        {...formik.getFieldProps('email')}
-                        errorMessage={
-                          formik.touched.email && formik.errors.email
-                        }
-                      />
+                      <TextInput label="Email" name="email" type="email" />
                     </div>
 
                     <div className="sm:col-span-3">
@@ -172,10 +158,6 @@ function App() {
                         label="Password"
                         name="password"
                         type="password"
-                        {...formik.getFieldProps('password')}
-                        errorMessage={
-                          formik.touched.password && formik.errors.password
-                        }
                       />
                     </div>
 
@@ -183,11 +165,8 @@ function App() {
                       <URLInput
                         label="Twitter handle"
                         name="twitter"
+                        type="text"
                         prefix="https://twitter.com/"
-                        {...formik.getFieldProps('twitter')}
-                        errorMessage={
-                          formik.touched.twitter && formik.errors.twitter
-                        }
                       />
                     </div>
                   </div>
